@@ -1,0 +1,63 @@
+https://www.youtube.com/watch?v=P5QbE9aRCLQ&list=PLaAoUJDWH9WrPXMOkqHHsPHxbhvRDqryM
+
+
+node with react native
+1. node authentication 
+npm init
+npm install express
+res.send use to send data to frontend
+req you get data from frontend in backend
+npm install nodemon
+const express = require('express')
+const app = express()
+app.get('/', (req, res, next) => {
+    res.send("hi Taimoor Welcome home")
+})
+app.listen(8000, () => {
+    console.log("Port is listening")
+})
+
+....The above method is used to use express inside node js server...
+Now MongoDB connection
+
+MongoDB Atlas websit sign into your account and click on create new project create project give project name.
+click on build cluster or create whatever option you see on the screen and then go with the free and mumbai 
+region(near asia region) and click on the create button.
+In MongoDB URI & Go with connect your application .. <password> space use real password and add username(tatabilla) befor colon and befor ? add database name
+MONGODB_URI = mongodb+srv://tatabilla:<password>@cluster0.0ilwqrd.mongodb.net/NodeRN_Auth_Todo?retryWrites=true&w=majority
+add file .env and 
+npm i dotenv
+add  require('dotenv').config in the above start of the page where you want to use enviornment variable e.g, MONGO_URI will be written in .env file
+npm install mongoose
+const mongoose = require('mongoose')
+mongoose.connect(process.env.MONGO_URI).then(() => {
+    console.log("Connected to Mongo Database ... ")
+}).catch(err=> console.log(err.message))
+
+...Now database is connected. ...
+NOW Model mongo schema  (MVC)
+in a file user.js in models folder we will write schema as follow
+const mongoose = require('mongoose')
+const userSchema = new mongoose.Schema({
+    fullname: {
+        type: String,
+        required: true},
+    email: {
+        type: String,
+        required: true,
+    unique:true     // to have unique email  },
+    password: {
+        type: String,
+        required: true  },
+    avatar: Buffer   // buffer is used to save images
+})
+model.exports = mongoose.model('User', userSchema)
+next we can move code of moongose connection in a separate file and access it like that In app.js
+require('./models/db').
+now i can access model userschema in app and use it in app.post('/create-user')
+const User = require('./models/user')
+app.post('/create-user', async (req, res, next) => {
+    const user = await User({ fullname: "Taimoor", email: "Taimoorali083@gmailc.om", password: "22234523" })
+    await user.save()  //to save data in mongoDB
+    res.json(user)
+})
